@@ -32,14 +32,19 @@
     [super viewDidLoad];
     
     for (int i = 1; i <= 10; i++) {
+        
         NSString *imageName = [NSString stringWithFormat:@"%d.jpg", i];
+        
         UIImage *image = [UIImage imageNamed:imageName];
+        
         if (image) {
+            
             [self.images addObject:image];
+        
         }
     }
 
-[self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"imageCell"];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"imageCell"];
 
 }
 
@@ -98,25 +103,36 @@
 }
 
 
-/*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-*/
 
-/*
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
+    
+    
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
+        
+        // update the image array after deleting images as required in assignment 27
+        // you must first remove the image from the array and THEN delete the row from the table THEN RELOAD the table
+            
+        [self.images removeObjectAtIndex:indexPath.row];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        [tableView reloadData];
+        
+        // end of the update for assignment 27 updating the image array after deleting
+    
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
+
 }
-*/
 
 /*
 // Override to support rearranging the table view.
