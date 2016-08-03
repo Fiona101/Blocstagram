@@ -22,6 +22,10 @@
 		044884AF1D4911CC00498570 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 044884AE1D4911CC00498570 /* AppDelegate.m */; };
 		044884B71D4911CC00498570 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 044884B61D4911CC00498570 /* Assets.xcassets */; };
 		044884BA1D4911CC00498570 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 044884B81D4911CC00498570 /* LaunchScreen.storyboard */; };
+		04C213061D51E18000AA1086 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C213051D51E18000AA1086 /* User.m */; };
+		04C213091D51E27400AA1086 /* Media.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C213081D51E27400AA1086 /* Media.m */; };
+		04C2130C1D51E5E200AA1086 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C2130B1D51E5E200AA1086 /* Comment.m */; };
+		04C2130F1D51E9A000AA1086 /* DataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C2130E1D51E9A000AA1086 /* DataSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +48,14 @@
 		044884B61D4911CC00498570 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		044884B91D4911CC00498570 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		044884BB1D4911CC00498570 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04C213041D51E18000AA1086 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		04C213051D51E18000AA1086 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		04C213071D51E27400AA1086 /* Media.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Media.h; sourceTree = "<group>"; };
+		04C213081D51E27400AA1086 /* Media.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Media.m; sourceTree = "<group>"; };
+		04C2130A1D51E5E200AA1086 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
+		04C2130B1D51E5E200AA1086 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
+		04C2130D1D51E9A000AA1086 /* DataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSource.h; sourceTree = "<group>"; };
+		04C2130E1D51E9A000AA1086 /* DataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +91,14 @@
 			children = (
 				0445B1DF1D50B4DA006666B1 /* ImagesTableViewController.h */,
 				0445B1E01D50B4DA006666B1 /* ImagesTableViewController.m */,
+				04C213041D51E18000AA1086 /* User.h */,
+				04C213051D51E18000AA1086 /* User.m */,
+				04C213071D51E27400AA1086 /* Media.h */,
+				04C213081D51E27400AA1086 /* Media.m */,
+				04C2130A1D51E5E200AA1086 /* Comment.h */,
+				04C2130B1D51E5E200AA1086 /* Comment.m */,
+				04C2130D1D51E9A000AA1086 /* DataSource.h */,
+				04C2130E1D51E9A000AA1086 /* DataSource.m */,
 				044884A91D4911CC00498570 /* Blocstagram */,
 				044884A81D4911CC00498570 /* Products */,
 			);
@@ -194,7 +214,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C213061D51E18000AA1086 /* User.m in Sources */,
+				04C2130C1D51E5E200AA1086 /* Comment.m in Sources */,
+				04C213091D51E27400AA1086 /* Media.m in Sources */,
 				044884AF1D4911CC00498570 /* AppDelegate.m in Sources */,
+				04C2130F1D51E9A000AA1086 /* DataSource.m in Sources */,
 				044884AC1D4911CC00498570 /* main.m in Sources */,
 				0445B1E11D50B4DA006666B1 /* ImagesTableViewController.m in Sources */,
 			);
