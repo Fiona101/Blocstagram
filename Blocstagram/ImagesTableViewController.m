@@ -16,6 +16,7 @@
 
 @interface ImagesTableViewController ()
 
+
 @end
 
 
@@ -47,13 +48,21 @@
 }
     /*/
 
+- (NSArray *)items {
+    
+    return [DataSource sharedInstance].mediaItems;
+
+}
+
 
 #pragma mark - Table view data source
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return [DataSource sharedInstance].mediaItems.count;
+    // return [DataSource sharedInstance].mediaItems.count;
+    
+    return [self items].count;
 
 }
 
