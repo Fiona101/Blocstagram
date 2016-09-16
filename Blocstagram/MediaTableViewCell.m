@@ -17,6 +17,8 @@
 @property (nonatomic, strong) UIImageView *mediaImageView;
 @property (nonatomic, strong) UILabel *usernameAndCaptionLabel;
 @property (nonatomic, strong) UILabel *commentLabel;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+
 
 @end
 
@@ -27,6 +29,7 @@ static UIColor *usernameLabelGray;
 static UIColor *commentLabelGray;
 static UIColor *linkColor;
 static NSParagraphStyle *paragraphStyle;
+static UIColor *orangeColor;
 
 
 @implementation MediaTableViewCell
@@ -97,22 +100,37 @@ static NSParagraphStyle *paragraphStyle;
     for (Comment *comment in self.mediaItem.comments) {
         // Make a string that says "username comment" followed by a line break
         NSString *baseString = [NSString stringWithFormat:@"%@ %@\n", comment.from.userName, comment.text];
+     
         
         // Make an attributed string, with the "username" bold
         
         NSMutableAttributedString *oneCommentString = [[NSMutableAttributedString alloc] initWithString:baseString attributes:@{NSFontAttributeName : lightFont, NSParagraphStyleAttributeName : paragraphStyle}];
+      
         
         NSRange usernameRange = [baseString rangeOfString:comment.from.userName];
         [oneCommentString addAttribute:NSFontAttributeName value:boldFont range:usernameRange];
-        [oneCommentString addAttribute:NSForegroundColorAttributeName value:linkColor range:usernameRange];
+        [oneCommentString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:usernameRange];
         
+            
+        if (_indexPath.row == 0)
+        
+        {
+            NSRange firstCommentRange = [baseString rangeOfString:comment.text];
+                
+            [oneCommentString addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:firstCommentRange];
+           
+        }
+            
         [commentString appendAttributedString:oneCommentString];
+        
     }
     
     return commentString;
 }
 
+    
 
+        
 - (CGSize) sizeOfString:(NSAttributedString *)string {
     CGSize maxSize = CGSizeMake(CGRectGetWidth(self.contentView.bounds) - 40, 0.0);
     CGRect sizeRect = [string boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
