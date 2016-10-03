@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+
 @class Media;
 
 
 @interface MediaTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) Media *mediaItem;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+
+
 
 + (CGFloat) heightForMediaItem:(Media *)mediaItem width:(CGFloat)width;
 

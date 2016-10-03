@@ -17,7 +17,7 @@
 @property (nonatomic, strong) UIImageView *mediaImageView;
 @property (nonatomic, strong) UILabel *usernameAndCaptionLabel;
 @property (nonatomic, strong) UILabel *commentLabel;
-@property (nonatomic, strong) NSIndexPath *indexPath;
+@property(nonatomic) NSTextAlignment alignment;
 
 
 @end
@@ -30,6 +30,7 @@ static UIColor *commentLabelGray;
 static UIColor *linkColor;
 static NSParagraphStyle *paragraphStyle;
 static UIColor *orangeColor;
+static NSParagraphStyle *paragraphStyleRight;
 
 
 @implementation MediaTableViewCell
@@ -71,6 +72,10 @@ static UIColor *orangeColor;
     mutableParagraphStyle.tailIndent = -20.0;
     mutableParagraphStyle.paragraphSpacingBefore = 5;
     
+    //assignment29 to right align every second comment
+    
+    mutableParagraphStyle.alignment = NSTextAlignmentLeft;
+    
     paragraphStyle = mutableParagraphStyle;
 
 }
@@ -88,6 +93,14 @@ static UIColor *orangeColor;
     // #4
     NSRange usernameRange = [baseString rangeOfString:self.mediaItem.user.userName];
     [mutableUsernameAndCaptionString addAttribute:NSFontAttributeName value:[boldFont fontWithSize:usernameFontSize] range:usernameRange];
+    
+    
+    // Assignment 29 set kerning - i.e. set space inbetween characters
+    
+    float spacing = 5.0f;
+    
+    [mutableUsernameAndCaptionString addAttribute:NSKernAttributeName value:@(spacing) range:NSMakeRange(0, [self.mediaItem.caption length])];
+    
     [mutableUsernameAndCaptionString addAttribute:NSForegroundColorAttributeName value:linkColor range:usernameRange];
     
     return mutableUsernameAndCaptionString;
@@ -105,14 +118,12 @@ static UIColor *orangeColor;
         // Make an attributed string, with the "username" bold
         
         NSMutableAttributedString *oneCommentString = [[NSMutableAttributedString alloc] initWithString:baseString attributes:@{NSFontAttributeName : lightFont, NSParagraphStyleAttributeName : paragraphStyle}];
-      
-        
+       
         NSRange usernameRange = [baseString rangeOfString:comment.from.userName];
         [oneCommentString addAttribute:NSFontAttributeName value:boldFont range:usernameRange];
-        [oneCommentString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:usernameRange];
         
             
-        if (_indexPath.row == 0)
+        if ([self.mediaItem.comments indexOfObject:comment] == 0) // if this is the first comment then make it orange
         
         {
             NSRange firstCommentRange = [baseString rangeOfString:comment.text];
@@ -120,15 +131,37 @@ static UIColor *orangeColor;
             [oneCommentString addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:firstCommentRange];
            
         }
+        
+        // Assignment 29 right align every other comment
+               
+        if ([self.mediaItem.comments indexOfObject:comment] % 2 == 0)
+        
+        {
             
+          NSMutableParagraphStyle *mutableParagraphStyle2 = [[NSMutableParagraphStyle alloc] init];
+            mutableParagraphStyle2.headIndent = 20.0;
+            mutableParagraphStyle2.firstLineHeadIndent = 20.0;
+            mutableParagraphStyle2.tailIndent = -20.0;
+            mutableParagraphStyle2.paragraphSpacingBefore = 5;
+
+            mutableParagraphStyle2.alignment = NSTextAlignmentRight;
+            
+            paragraphStyleRight = mutableParagraphStyle2;
+            
+            // do not use the alternateCommentRange below as you need the whole lie including the bold username at the start in order to get it right aligned
+            // instead use the NSMakeRange(0, baseString.length) shown below
+            // NSRange alternateCommentRange = [baseString rangeOfString:comment.text];
+            
+            [oneCommentString addAttribute:NSParagraphStyleAttributeName value:mutableParagraphStyle2 range:NSMakeRange(0, baseString.length)];
+            
+        }
+        
         [commentString appendAttributedString:oneCommentString];
         
     }
     
     return commentString;
 }
-
-    
 
         
 - (CGSize) sizeOfString:(NSAttributedString *)string {
