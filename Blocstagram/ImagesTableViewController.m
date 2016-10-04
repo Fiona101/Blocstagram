@@ -89,6 +89,7 @@
                 [self.tableView insertRowsAtIndexPaths:indexPathsThatChanged withRowAnimation:UITableViewRowAnimationAutomatic];
             
             } else if (kindOfChange == NSKeyValueChangeRemoval) {
+                
                 [self.tableView deleteRowsAtIndexPaths:indexPathsThatChanged withRowAnimation:UITableViewRowAnimationAutomatic];
             
             } else if (kindOfChange == NSKeyValueChangeReplacement) {
@@ -113,6 +114,7 @@
             // Delete the row from the data source
         Media *item = [DataSource sharedInstance].mediaItems[indexPath.row];
         [[DataSource sharedInstance] deleteMediaItem:item];
+            [[DataSource sharedInstance] insertObject:item inMediaItemsAtIndex:0];
     }
 }
 
