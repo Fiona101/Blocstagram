@@ -210,7 +210,7 @@ static NSParagraphStyle *paragraphStyle;
     self.commentLabelHeightConstraint.constant = commentLabelSize.height + 20;
     
     
-    /*/ the below line was removed so that it does NO override the constraints to image height and width above which sets the image to 100 x 100 as required in assignment 30
+    /*/ the below line was removed so that it does NOT override the constraints to image height and width above which sets the image to 100 x 100 as required in assignment 30
      
     self.imageHeightConstraint.constant = self.mediaItem.image.size.height / self.mediaItem.image.size.width * CGRectGetWidth(self.contentView.bounds);
      /*/
