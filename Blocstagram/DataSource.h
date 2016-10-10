@@ -12,6 +12,7 @@
 @class Media;
 
 typedef void (^NewItemCompletionBlock)(NSError *error);
+typedef void (^OnComplete) (NSData *responseData);
 
 
 @interface DataSource : NSObject
@@ -21,7 +22,7 @@ typedef void (^NewItemCompletionBlock)(NSError *error);
 
 
 @property (nonatomic, strong, readonly) NSArray *mediaItems;
-
+@property (nonatomic, strong, readonly) NSString *accessToken;
 
 - (void) deleteMediaItem:(Media *)item;
 
@@ -29,5 +30,8 @@ typedef void (^NewItemCompletionBlock)(NSError *error);
 - (void) requestNewItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler;
 
 - (void) requestOldItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler;
+
++ (NSString *) instagramClientID;
+
 
 @end

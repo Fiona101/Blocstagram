@@ -23,6 +23,7 @@
 		044884B71D4911CC00498570 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 044884B61D4911CC00498570 /* Assets.xcassets */; };
 		044884BA1D4911CC00498570 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 044884B81D4911CC00498570 /* LaunchScreen.storyboard */; };
 		044FD1A21D882B2400372FAE /* MediaTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 044FD1A11D882B2400372FAE /* MediaTableViewCell.m */; };
+		04C08C081DAAC0D5000D9626 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C08C071DAAC0D5000D9626 /* LoginViewController.m */; };
 		04C213061D51E18000AA1086 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C213051D51E18000AA1086 /* User.m */; };
 		04C213091D51E27400AA1086 /* Media.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C213081D51E27400AA1086 /* Media.m */; };
 		04C2130C1D51E5E200AA1086 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C2130B1D51E5E200AA1086 /* Comment.m */; };
@@ -51,6 +52,8 @@
 		044884BB1D4911CC00498570 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		044FD1A01D882B2400372FAE /* MediaTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaTableViewCell.h; sourceTree = "<group>"; };
 		044FD1A11D882B2400372FAE /* MediaTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaTableViewCell.m; sourceTree = "<group>"; };
+		04C08C061DAAC0D5000D9626 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		04C08C071DAAC0D5000D9626 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		04C213041D51E18000AA1086 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		04C213051D51E18000AA1086 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		04C213071D51E27400AA1086 /* Media.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Media.h; sourceTree = "<group>"; };
@@ -92,6 +95,8 @@
 		0448849E1D4911CC00498570 = {
 			isa = PBXGroup;
 			children = (
+				04C08C061DAAC0D5000D9626 /* LoginViewController.h */,
+				04C08C071DAAC0D5000D9626 /* LoginViewController.m */,
 				044FD1A01D882B2400372FAE /* MediaTableViewCell.h */,
 				044FD1A11D882B2400372FAE /* MediaTableViewCell.m */,
 				0445B1DF1D50B4DA006666B1 /* ImagesTableViewController.h */,
@@ -224,6 +229,7 @@
 				044FD1A21D882B2400372FAE /* MediaTableViewCell.m in Sources */,
 				04C213091D51E27400AA1086 /* Media.m in Sources */,
 				044884AF1D4911CC00498570 /* AppDelegate.m in Sources */,
+				04C08C081DAAC0D5000D9626 /* LoginViewController.m in Sources */,
 				04C2130F1D51E9A000AA1086 /* DataSource.m in Sources */,
 				044884AC1D4911CC00498570 /* main.m in Sources */,
 				0445B1E11D50B4DA006666B1 /* ImagesTableViewController.m in Sources */,
