@@ -13,6 +13,9 @@
 @interface LoginViewController () <UIWebViewDelegate>
 
 @property (nonatomic, weak) UIWebView *webView;
+@property(nonatomic, strong) UIBarButtonItem *backBarButtonItem;
+@property(nonatomic) SEL goHome;
+
 
 @end
 
@@ -34,13 +37,32 @@ NSString *const LoginViewControllerDidGetAccessTokenNotification = @"LoginViewCo
     // Do any additional setup after loading the view.
 
     UIWebView *webView = [[UIWebView alloc] init];
+    
     webView.delegate = self;
     
     [self.view addSubview:webView];
+    
     self.webView = webView;
     
     self.title = NSLocalizedString(@"Login", @"Login");
 
+    [self goHome];
+    
+    
+  UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleDone target:self action:@selector(goHome)];
+    
+    self.navigationItem.leftBarButtonItems = @[backBarButtonItem];
+}
+
+-(void)home:(UIBarButtonItem *)sender {
+   
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+
+
+- (void)goHome {
+    
     NSString *urlString = [NSString stringWithFormat:@"https://instagram.com/oauth/authorize/?client_id=%@&redirect_uri=%@&response_type=token", [DataSource instagramClientID], [self redirectURI]];
     
     NSURL *url = [NSURL URLWithString:urlString];
@@ -50,7 +72,7 @@ NSString *const LoginViewControllerDidGetAccessTokenNotification = @"LoginViewCo
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         
         [self.webView loadRequest:request];
-    
+        
     }
     
 }
