@@ -27,6 +27,7 @@
 
 @property (nonatomic, assign) BOOL isLoadingOlderItems;
 
+@property (nonatomic, assign) BOOL thereAreNoMoreOlderMessages;
 
 @end
 
@@ -71,8 +72,7 @@
         
         // Got a token; populate the initial data
         
-        [self populateDataWithParameters:nil];
-    
+        [self populateDataWithParameters:nil completionHandler:nil];
     }];
 }
 
@@ -115,6 +115,8 @@
 
 - (void) requestNewItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler {
     
+    self.thereAreNoMoreOlderMessages = NO;
+    
     // #1
     if (self.isRefreshing == NO) {
         
@@ -125,33 +127,50 @@
         // TODO: Add images
         
         
-        self.isRefreshing = NO;
+        NSString *minID = [[self.mediaItems firstObject] idNumber];
+        NSDictionary *parameters;
         
-        if (completionHandler) {
-            
-            completionHandler(nil);
+        if (minID) {
+            parameters = @{@"min_id": minID};
         }
+        
+        [self populateDataWithParameters:parameters completionHandler:^(NSError *error) {
+            self.isRefreshing = NO;
+            
+            if (completionHandler) {
+                completionHandler(error);
+            }
+        }];
     }
 }
 
 
 - (void) requestOldItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler {
     
-    if (self.isLoadingOlderItems == NO) {
-        self.isLoadingOlderItems = YES;
-        
-        
+            if (self.isLoadingOlderItems == NO && self.thereAreNoMoreOlderMessages == NO) {
+                 
+                self.isLoadingOlderItems = YES;
         
         // TODO: Add images
+                
+        NSString *maxID = [[self.mediaItems lastObject] idNumber];
+        NSDictionary *parameters;
         
-        
-        self.isLoadingOlderItems = NO;
-        
-        if (completionHandler) {
-            completionHandler(nil);
-        }
+            if (maxID) {
+                    parameters = @{@"max_id": maxID};
+            
+                }
+                    [self populateDataWithParameters:parameters completionHandler:^(NSError *error) {
+                    
+                        self.isLoadingOlderItems = NO;
+                        
+                        if (completionHandler) {
+                        completionHandler(error);
+                        }
+                    }];
+            
+            }
     }
-}
 
 
 
@@ -161,7 +180,8 @@
     
 }
 
-- (void) populateDataWithParameters:(NSDictionary *)parameters {
+    
+- (void) populateDataWithParameters:(NSDictionary *)parameters completionHandler:(NewItemCompletionBlock)completionHandler {
     
     if (self.accessToken) {
     
@@ -171,7 +191,7 @@
         
             // do the network request in the background, so the UI doesn't lock up
             
-            NSMutableString *urlString = [NSMutableString stringWithFormat:@"https://api.instagram.com/v1/users/self/media/recent/?access_token=ACCESS-TOKEN=%@", self.accessToken];
+            NSMutableString *urlString = [NSMutableString stringWithFormat:@"https://api.instagram.com/v1/users/self/media/recent/?access_token=%@", self.accessToken];
             
             for (NSString *parameterName in parameters) {
             
@@ -185,9 +205,9 @@
                 
                 NSURLRequest *request = [NSURLRequest requestWithURL:url];
                 
-                NSURLResponse *response;
+                // NSURLResponse *response;
                 
-                NSError *webError;
+                // NSError *webError;  with NSURLSession this is now error
     
                 
                 // NSData *responseData = [NSURLSession dataTaskWithRequest:request returningResponse:&response error:&webError];
@@ -199,27 +219,45 @@
             NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
             NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
                 NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                    if (data) {
+                    
+                if (data) {
                         
-                        NSError *jsonError;
+                    NSError *jsonError;
                         
-                        NSDictionary *feedDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                    NSDictionary *feedDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
                         
-                        if (feedDictionary) {
+                if (feedDictionary) {
                             
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
                                 
-                                // done networking, go back on the main thread
-                                [self parseDataFromFeedDictionary:feedDictionary fromRequestWithParameters:parameters];
-                            });
-                        }
+                    // done networking, go back on the main thread
+                    
+                    [self parseDataFromFeedDictionary:feedDictionary fromRequestWithParameters:parameters];
+                        
+                            if (completionHandler) {
+                            
+                                completionHandler(nil);
+                            }
+                        });
+                
+                    } else if (completionHandler) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(jsonError);
+                        });
                     }
+                    
+                } else if (completionHandler) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(error);
+                    });
+                
+                }
+                
                 }];
+                
+                // below resume put in as it makes it work with the NSURLSession
                 [dataTask resume];
-                                                  
                 
-                
-
             }
         });
     }
@@ -227,8 +265,108 @@
 
 - (void) parseDataFromFeedDictionary:(NSDictionary *) feedDictionary fromRequestWithParameters:(NSDictionary *)parameters {
     
-    NSLog(@"%@", feedDictionary);
+    NSArray *mediaArray = feedDictionary[@"data"];
+    
+    NSMutableArray *tmpMediaItems = [NSMutableArray array];
+    
+    for (NSDictionary *mediaDictionary in mediaArray) {
+        Media *mediaItem = [[Media alloc] initWithDictionary:mediaDictionary];
+        
+        if (mediaItem) {
+            [tmpMediaItems addObject:mediaItem];
+            
+            [self downloadImageForMediaItem:mediaItem];
+        
+            }
+        }
+    
+    NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
+    
+    if (parameters[@"min_id"]) {
+        // This was a pull-to-refresh request
+        
+        NSRange rangeOfIndexes = NSMakeRange(0, tmpMediaItems.count);
+        
+        NSIndexSet *indexSetOfNewObjects = [NSIndexSet indexSetWithIndexesInRange:rangeOfIndexes];
+        
+        [mutableArrayWithKVO insertObjects:tmpMediaItems atIndexes:indexSetOfNewObjects];
+        
+            } else if (parameters[@"max_id"]) {
+                // This was an infinite scroll request
+        
+                if (tmpMediaItems.count == 0) {
+                    // disable infinite scroll, since there are no more older messages
+                    self.thereAreNoMoreOlderMessages = YES;
+                
+            } else {
+                
+                [mutableArrayWithKVO addObjectsFromArray:tmpMediaItems];
+            }
+    
+            } else {
+                
+                [self willChangeValueForKey:@"mediaItems"];
+                self.mediaItems = tmpMediaItems;
+                [self didChangeValueForKey:@"mediaItems"];
+    }
 
 }
 
+- (void) downloadImageForMediaItem:(Media *)mediaItem {
+    
+    if (mediaItem.mediaURL && !mediaItem.image) {
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
+            
+            NSURLRequest *request = [NSURLRequest requestWithURL:mediaItem.mediaURL];
+            NSURLResponse *response;
+            
+            NSError *error;
+            
+            //NSData *imageData;
+            
+            // codefrom checkpoint 34 below line
+            
+            NSData *imageData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+            
+            /*/ NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+            
+            NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+            
+            NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable imageData, NSURLResponse * _Nullable response, NSError * _Nullable error) { /*/
+            
+            if (imageData) {
+                UIImage *image = [UIImage imageWithData:imageData];
+                
+                if (image) {
+                    mediaItem.image = image;
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSMutableArray *mutableArrayWithKVO = [self mutableArrayValueForKey:@"mediaItems"];
+                        
+                        NSUInteger index = [mutableArrayWithKVO indexOfObject:mediaItem];
+                        
+                        [mutableArrayWithKVO replaceObjectAtIndex:index withObject:mediaItem];
+                        
+                        
+                    });
+                    
+    
+                    } else {
+                         NSLog(@"Error downloading image: %@", error);
+                    }
+            };
+                
+                     // below resume put in as it makes it work with the NSURLSession
+                     //[dataTask resume];
+                     
+            //}];
+            
+        });
+    }
+}
+
 @end
+
+
+

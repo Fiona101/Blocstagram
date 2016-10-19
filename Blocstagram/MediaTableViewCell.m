@@ -231,12 +231,17 @@ static NSParagraphStyle *paragraphStyle;
 
 }
 
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    [super setHighlighted:NO animated:animated];
+}
 
 
 // the code below was present when the class was set up and had above it the -(void)awakeFromNib method that was deleted
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
 
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    
+    [super setSelected:NO animated:animated];
+    
     // Configure the view for the selected state
 }
 

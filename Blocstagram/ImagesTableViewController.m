@@ -127,8 +127,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    return [DataSource sharedInstance].mediaItems.count;
-
+    NSInteger count = [DataSource sharedInstance].mediaItems.count;
+    return count;
 }
 
 
@@ -173,6 +173,24 @@
     [self infiniteScrollIfNecessary];
 }
 
+// Checkpoint 34  Making rough height estimates
+
+//Auto-layout is computationally expensive, and when we add 100 new Instagram posts at a time, it can slow down our UI responsiveness.
+
+// By making a rough estimated height, the table view avoids calculating the height of every cell, and instead calculates one at a time as they scroll into the view:
+
+- (CGFloat) tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Media *item = [DataSource sharedInstance].mediaItems[indexPath.row];
+    
+    if (item.image) {
+    
+        return 350;
+    
+    } else {
+    
+        return 150;
+    }
+}
 
 
 @end
