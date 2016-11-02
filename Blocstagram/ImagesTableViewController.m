@@ -43,6 +43,8 @@
     
     [self.tableView registerClass:[MediaTableViewCell class] forCellReuseIdentifier:@"mediaCell"];
 
+    [self refreshControlDidFire:self.refreshControl];
+    
 }
 
 - (void) dealloc
@@ -152,7 +154,9 @@
 
 - (void) refreshControlDidFire:(UIRefreshControl *) sender {
     [[DataSource sharedInstance] requestNewItemsWithCompletionHandler:^(NSError *error) {
+        
         [sender endRefreshing];
+    
     }];
 }
 
