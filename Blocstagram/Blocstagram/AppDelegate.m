@@ -29,18 +29,33 @@
     
     UINavigationController *navVC = [[UINavigationController alloc] init];
     
-    LoginViewController *loginVC = [[LoginViewController alloc] init];
     
-    [navVC setViewControllers:@[loginVC] animated:YES];
+    if (![DataSource sharedInstance].accessToken) {
+        
+        // these lines are unchanged; just indent them.
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:LoginViewControllerDidGetAccessTokenNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        LoginViewController *loginVC = [[LoginViewController alloc] init];
+    
+        [navVC setViewControllers:@[loginVC] animated:YES];
+    
+    
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:LoginViewControllerDidGetAccessTokenNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         
         ImagesTableViewController *imagesVC = [[ImagesTableViewController alloc] init];
         
         [navVC setViewControllers:@[imagesVC] animated:YES];
     }];
     
-    self.window.rootViewController = navVC;
+        } else {
+            
+            ImagesTableViewController *imagesVC = [[ImagesTableViewController alloc] init];
+            
+            [navVC setViewControllers:@[imagesVC] animated:YES];
+        }
+        
+        
+        self.window.rootViewController = navVC;
     
     // Override point for customisation after application launch
     
