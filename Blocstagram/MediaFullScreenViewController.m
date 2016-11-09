@@ -8,24 +8,29 @@
 
 #import "MediaFullScreenViewController.h"
 #import "Media.h"
+#import "ImagesTableViewController.h"
+#import "MediaTableViewCell.h"
 
-
-@interface MediaFullScreenViewController () <UIScrollViewDelegate>
+@interface MediaFullScreenViewController () <MediaTableViewCellDelegate,UIScrollViewDelegate>
 
 @property (nonatomic, strong) Media *media;
+@property (nonatomic, strong) MediaTableViewCell *mediaCell;
+
 @property (nonatomic, strong) UITapGestureRecognizer *tap;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTap;
+
 
 @end
 
 @implementation MediaFullScreenViewController
 
 
-- (instancetype) initWithMedia:(Media *)media {
+- (instancetype) initWithMediaCell:(MediaTableViewCell *)cell {
     self = [super init];
     
     if (self) {
-        self.media = media;
+        self.media = cell.mediaItem;
+        self.mediaCell = cell;
     }
     
     return self;
@@ -33,9 +38,24 @@
 
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.view.autoresizesSubviews = NO;
+    shareButton.autoresizingMask = 0;
+    [shareButton addTarget:self
+                    action:@selector(showActivityController)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    [shareButton setTitle:@"Share" forState:UIControlStateNormal];
+    
+    shareButton.frame = CGRectMake((self.view.bounds.size.width - 60), 10, 50, 30.0);
+    //shareButton.backgroundColor = [UIColor yellowColor];
+    
+
     // #1
     self.scrollView = [UIScrollView new];
     self.scrollView.delegate = self;
@@ -62,8 +82,32 @@
     [self.scrollView addGestureRecognizer:self.tap];
     [self.scrollView addGestureRecognizer:self.doubleTap];
 
+    [self.view addSubview:shareButton];
 
-    }
+    /*
+
+    NSLayoutConstraint *topLC = [NSLayoutConstraint constraintWithItem:shareButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:0.001 constant:5];
+    NSLayoutConstraint *rightLC = [NSLayoutConstraint constraintWithItem:shareButton attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailing multiplier:0 constant:15];
+
+    NSLayoutConstraint *widthLC = [NSLayoutConstraint constraintWithItem:shareButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:0.001 constant:65];
+    NSLayoutConstraint *heightLC = [NSLayoutConstraint constraintWithItem:shareButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:0.001 constant:35];
+*/
+    
+    NSDictionary *vb = NSDictionaryOfVariableBindings(shareButton);
+    /*
+    [NSLayoutConstraint activateConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-20-[shareButton(60)]-|" options:0 metrics:nil views:vb]];
+
+    [NSLayoutConstraint activateConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-10-[shareButton(30)]-|" options:0 metrics:nil views:vb]];
+    */
+     /*
+    shareButton.autoresizingMask = UIViewAutoresizingNone;
+     */
+    /*
+    [NSLayoutConstraint activateConstraints:@[topLC,rightLC
+                                              //,widthLC,heightLC
+                                              ]];
+*/
+}
 
 
 - (void) viewWillLayoutSubviews {
@@ -163,8 +207,27 @@
 
 }
 
+- (IBAction)showActivityController {
+    NSMutableArray *itemsToShare = [NSMutableArray array];
+    
+    if (self.media.caption.length > 0) {
+        [itemsToShare addObject:self.media.caption];
+    }
+    
+    if (self.media.image) {
+        [itemsToShare addObject:self.media.image];
+    }
+    
+    if (itemsToShare.count > 0) {
+        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
+        [self presentViewController:activityVC animated:YES completion:nil];
+        
+    }
+    
+}
 
-/*
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -172,6 +235,6 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
+
 
 @end

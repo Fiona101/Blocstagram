@@ -27,5 +27,6 @@
 @property (nonatomic, weak) id <MediaTableViewCellDelegate> delegate;
 
 + (CGFloat) heightForMediaItem:(Media *)mediaItem width:(CGFloat)width;
+- (IBAction) longPressFired:(UILongPressGestureRecognizer *)sender;
 
 @end

@@ -9,14 +9,19 @@
 #import <UIKit/UIKit.h>
 
 
-@class Media;
+@class MediaTableViewCell;
+
+
 
 @interface MediaFullScreenViewController : UIViewController
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIButton *shareButton;
+@property(nonatomic, readonly) UIButtonType buttonType;
 
-- (instancetype) initWithMedia:(Media *)media;
+
+- (instancetype) initWithMediaCell:(MediaTableViewCell *)cell;
 
 - (void) centerScrollView;
 
