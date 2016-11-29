@@ -14,8 +14,8 @@
 #import "MediaTableViewCell.h"
 #import "MediaFullScreenViewController.h"
 
-
 @interface ImagesTableViewController () <MediaTableViewCellDelegate>
+
 
 @end
 
@@ -205,7 +205,21 @@
     
     [self presentViewController:fullScreenVC animated:YES completion:nil];
 
-    }
+}
+
+
+- (void) cell:(MediaTableViewCell *)cell didTwoTapImageView:(UIImageView *)imageView {
+    
+//    [self cell:cell didLongPressImageView:imageView];
+    // set media item image to nil
+   
+        cell.mediaItem.image = nil;
+    // download it again
+    [[DataSource sharedInstance] downloadImageForMediaItem:cell.mediaItem];
+    
+    NSLog(@"now downloading");
+    
+}
 
 
 - (void) cell:(MediaTableViewCell *)cell didLongPressImageView:(UIImageView *)imageView {

@@ -22,8 +22,12 @@
 @property (nonatomic, strong) NSLayoutConstraint *commentLabelHeightConstraint;
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+
+@property (nonatomic, strong) UITapGestureRecognizer *twoTapGestureRecognizer;
+
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
+@property(nonatomic) NSUInteger numberOfTouchesRequired;
 
 @end
 
@@ -43,13 +47,31 @@ static NSParagraphStyle *paragraphStyle;
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        
+        
         self.mediaImageView = [[UIImageView alloc] init];
         
         self.mediaImageView.userInteractionEnabled = YES;
         
         self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
+        
+        // assignment 37
+        
+        //self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTaps:)];
+        
+        
         self.tapGestureRecognizer.delegate = self;
+        
+        self.tapGestureRecognizer.numberOfTouchesRequired = 1;
         [self.mediaImageView addGestureRecognizer:self.tapGestureRecognizer];
+        
+        self.twoTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(twoTapFired:)];
+        
+        self.twoTapGestureRecognizer.delegate = self;
+        
+        self.twoTapGestureRecognizer.numberOfTouchesRequired = 2;
+        [self.mediaImageView addGestureRecognizer:self.twoTapGestureRecognizer];
+        
         
         self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
         self.longPressGestureRecognizer.delegate = self;
@@ -261,18 +283,31 @@ static NSParagraphStyle *paragraphStyle;
     // Configure the view for the selected state
 }
 
+
 #pragma mark - Image View
 
-- (void) tapFired:(UITapGestureRecognizer *)sender {
-    [self.delegate cell:self didTapImageView:self.mediaImageView];
 
+// the next two methods are from checkpoint 36
+
+- (void) tapFired:(UITapGestureRecognizer *)sender {
+    if ([self.delegate respondsToSelector:@selector(cell:didTapImageView:)]) {
+        [self.delegate cell:self didTapImageView:self.mediaImageView];
+    }
 }
+
+- (void) twoTapFired:(UITapGestureRecognizer *)sender {
+    if ([self.delegate respondsToSelector:@selector(cell:didTwoTapImageView:)]) {
+        [self.delegate cell:self didTwoTapImageView:self.mediaImageView];
+    }
+}
+
 
 - (void) longPressFired:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         [self.delegate cell:self didLongPressImageView:self.mediaImageView];
     }
 }
+
 
 
 #pragma mark - UIGestureRecognizerDelegate
