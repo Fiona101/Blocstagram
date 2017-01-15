@@ -31,6 +31,8 @@ typedef void (^OnComplete) (NSData *responseData);
 
 - (void) requestOldItemsWithCompletionHandler:(NewItemCompletionBlock)completionHandler;
 
+- (void) downloadImageForMediaItem:(Media *)mediaItem;
+
 + (NSString *) instagramClientID;
 
 
